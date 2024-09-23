@@ -1,0 +1,50 @@
+package app;
+
+import java.util.Calendar;
+
+import model.BaseDados;
+import model.Compra;
+import model.Gerente;
+import model.Produto;
+
+public class App {
+    public static void main(String[] args) {
+        // Criar o gerente
+        Gerente joseSantos = new Gerente("Jose Santos", "111.111.111-11", 3200.50);
+        System.out.println("Gerente: " + joseSantos.getNome());
+
+        // Cadastrar produtos na base de dados
+        Calendar validadeFeijao = Calendar.getInstance();
+        validadeFeijao.set(2022, Calendar.OCTOBER, 12);
+        Produto feijao = new Produto("Feijão da Serra", "PROD001", 9.00, validadeFeijao.getTime(), false);
+        BaseDados.addProduto(feijao);
+
+        Calendar validadeLaranja = Calendar.getInstance();
+        validadeLaranja.set(2022, Calendar.AUGUST, 30);
+        Produto laranja = new Produto("Laranja Formosa", "PROD003", 0.50, validadeLaranja.getTime(), true);
+        BaseDados.addProduto(laranja);
+
+        Calendar validadeBiscoito = Calendar.getInstance();
+        validadeBiscoito.set(2023, Calendar.FEBRUARY, 1);
+        Produto biscoito = new Produto("Biscoito Treloso", "PROD002", 1.50, validadeBiscoito.getTime(), false);
+        BaseDados.addProduto(biscoito);
+
+        // Criar compras
+        Compra compra1 = new Compra();
+        compra1.adicionarProduto(feijao);
+        System.out.println(compra1);
+
+        Compra compra2 = new Compra();
+        compra2.adicionarProduto(feijao);
+        compra2.adicionarProduto(laranja);
+        System.out.println(compra2);
+
+        // Compra com desconto
+        Compra compra3 = new Compra();
+        for (int i = 0; i < 100; i++) {
+            compra3.adicionarProduto(biscoito);
+        }
+        joseSantos.darDesconto(compra3);
+        System.out.println(compra3);
+    }
+}

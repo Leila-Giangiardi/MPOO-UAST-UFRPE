@@ -1,0 +1,34 @@
+package model;
+
+import java.util.ArrayList;
+import java.util.Date;
+
+public class BaseDados {
+    private static ArrayList<Produto> produtos = new ArrayList<>();
+
+    public static boolean addProduto(Produto produto) {
+        for (Produto p : produtos) {
+            if (p.getCodBarras().equals(produto.getCodBarras())) {
+                System.out.println("Produto já cadastrado!");
+                return false;
+            }
+        }
+
+        if (Verificador.verificarValidade(produto)) {
+            System.out.println("Erro ao cadastrar produto: Produto vencido!");
+            return false;
+        }
+
+        produtos.add(produto);
+        System.out.println("Produto cadastrado com sucesso!");
+        return true;
+    }
+
+    public static ArrayList<String> exibirProduto() {
+        ArrayList<String> nomes = new ArrayList<>();
+        for (Produto p : produtos) {
+            nomes.add(p.getNome());
+        }
+        return nomes;
+    }
+}
