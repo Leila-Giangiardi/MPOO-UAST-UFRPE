@@ -1,0 +1,95 @@
+package model;
+
+import java.util.Date;
+
+public class Produto {
+    private String nome;
+    private String codBarras;
+    private double preco;
+    private Date validade;
+    private boolean perecivel;
+    private int estoque;
+    private int quantidade; 
+
+
+    public Produto(String nome, String codBarras, double preco, Date validade, boolean perecivel, int estoque,
+			int quantidade) {
+		this.nome = nome;
+		this.codBarras = codBarras;
+		this.preco = preco;
+		this.validade = validade;
+		this.perecivel = perecivel;
+		this.estoque = estoque;
+		this.quantidade = quantidade;
+	}
+
+	public String getNome() {
+		return nome;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+
+	public String getCodBarras() {
+		return codBarras;
+	}
+
+	public void setCodBarras(String codBarras) {
+		this.codBarras = codBarras;
+	}
+
+	public double getPreco() {
+		return preco;
+	}
+
+	public void setPreco(double preco) {
+		this.preco = preco;
+	}
+
+	public Date getValidade() {
+		return validade;
+	}
+
+	public void setValidade(Date validade) {
+		this.validade = validade;
+	}
+
+	public boolean isPerecivel() {
+		return perecivel;
+	}
+
+	public void setPerecivel(boolean perecivel) {
+		this.perecivel = perecivel;
+	}
+
+	public int getEstoque() {
+		return estoque;
+	}
+
+	public void setEstoque(int estoque) {
+		this.estoque = estoque;
+	}
+
+	public int getQuantidade() {
+		return quantidade;
+	}
+
+	public void setQuantidade(int quantidade) {
+		this.quantidade = quantidade;
+	}
+
+	public boolean reduzirEstoque(int quantidade) {
+        if (estoque >= quantidade) {
+            estoque -= quantidade;
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public String toString() {
+        return nome + " (R$" + preco + ") - Estoque: " + estoque;
+    }
+
+
