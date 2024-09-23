@@ -4,15 +4,17 @@ import model.BaseDados;
 import model.CampanhaQueimaEstoque;
 import model.Compra;
 import model.Gerente;
+import view.TelaProdutos;
 
 public class App {
     public static void main(String[] args) {
         // Inicializar a base de dados com os produtos
         BaseDados.inicializarBase();
+        new TelaProdutos();
 
         // Criar o gerente
-        Gerente joseSantos = new Gerente("Jose Santos", "111.111.111-11", 3200.50);
-        System.out.println("Gerente: " + joseSantos.getNome());
+        Gerente gerente = Gerente.getInstancia("Jose Santos", "111.111.111-11", 3200.50);
+        System.out.println("Gerente: " + gerente.getNome());
 
         // Exibir todos os produtos cadastrados com detalhes
         System.out.println("\nProdutos cadastrados:");
@@ -42,7 +44,7 @@ public class App {
         // Criar uma segunda compra (100 biscoitos com pedido de desconto)
         Compra compra3 = new Compra();
         compra3.adicionarProduto(BaseDados.buscarProduto("PROD002"), 100); // Biscoito Treloso
-        joseSantos.darDesconto(compra3); // Aplicar desconto de 10%
+        gerente.darDesconto(compra3); // Aplicar desconto de 10%
         System.out.println("\nResumo da Compra 3 com desconto:");
         System.out.println(compra3);
 

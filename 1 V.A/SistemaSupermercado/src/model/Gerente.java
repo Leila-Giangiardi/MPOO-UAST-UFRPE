@@ -1,8 +1,20 @@
 package model;
 
 public class Gerente extends Funcionario {
-    public Gerente(String nome, String cpf, double salario) {
+    // Única instância do gerente
+    private static Gerente instancia;
+
+    // Construtor privado para impedir a criação de outras instâncias
+    private Gerente(String nome, String cpf, double salario) {
         super(nome, cpf, salario);
+    }
+
+    // Método para retornar a única instância do gerente
+    public static Gerente getInstancia(String nome, String cpf, double salario) {
+        if (instancia == null) {
+            instancia = new Gerente(nome, cpf, salario);
+        }
+        return instancia;
     }
 
     public void darDesconto(Compra compra) {

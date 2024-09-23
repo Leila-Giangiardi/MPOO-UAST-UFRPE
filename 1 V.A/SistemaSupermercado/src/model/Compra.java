@@ -1,40 +1,56 @@
 package model;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Compra {
-    private static int contadorCompras = 1;
-    private int idCompra;
-    private ArrayList<Produto> produtos;
-    private double valorTotal;
+    private HashMap<Produto, Integer> produtos;
 
     public Compra() {
-        this.idCompra = contadorCompras++;
-        this.produtos = new ArrayList<>();
+        produtos = new HashMap<>();
     }
 
+    // Método para adicionar produto ao carrinho
     public void adicionarProduto(Produto produto, int quantidade) {
-        if (produto.reduzirEstoque(quantidade)) {
-            for (int i = 0; i < quantidade; i++) {
-                produtos.add(produto);
-                valorTotal += produto.getPreco();
-            }
-            System.out.println(quantidade + " unidades de " + produto.getNome() + " adicionadas à compra.");
+        if (produtos.containsKey(produto)) {
+            // Se já estiver no carrinho, apenas aumenta a quantidade
+            produtos.put(produto, produtos.get(produto) + quantidade);
         } else {
-            System.out.println("Estoque insuficiente para " + produto.getNome() + ".");
+            // Caso contrário, adiciona o produto novo ao carrinho
+            produtos.put(produto, quantidade);
         }
     }
 
+    // Método para alterar a quantidade de um produto
+    public void alterarQuantidadeProduto(Produto produto, int novaQuantidade) {
+        if (produtos.containsKey(produto)) {
+            if (novaQuantidade <= 0) {
+                // Se a nova quantidade for 0 ou negativa, remove o produto do carrinho
+                produtos.remove(produto);
+            } else {
+                // Caso contrário, atualiza a quantidade
+                produtos.put(produto, novaQuantidade);
+            }
+        } else {
+            System.out.println("Produto não encontrado no carrinho!");
+        }
+    }
+
+    // Método para obter o valor total da compra
     public double getValorTotal() {
-        return valorTotal;
+        double total = 0;
+        for (Produto produto : produtos.keySet()) {
+            total += produto.getPreco() * produtos.get(produto);
+        }
+        return total;
     }
 
-    public int getIdCompra() {
-        return idCompra;
+    // Método para obter a lista de produtos e suas quantidades
+    public HashMap<Produto, Integer> getProdutos() {
+        return produtos;
     }
 
-    @Override
-    public String toString() {
-        return "Compra #" + idCompra + " - Valor: R$" + valorTotal;
+    // Método para remover um produto do carrinho
+    public void removerProduto(Produto produto) {
+        produtos.remove(produto);
     }
 }

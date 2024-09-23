@@ -48,11 +48,14 @@ public class Produto {
     }
 
     public boolean reduzirEstoque(int quantidade) {
-        if (estoque >= quantidade) {
-            estoque -= quantidade;
-            return true;
+        if (quantidade <= 0) {
+            throw new IllegalArgumentException("Quantidade deve ser maior que zero.");
         }
-        return false;
+        if (estoque >= quantidade) {
+            estoque -= quantidade; // Reduz o estoque
+            return true; // Operação bem-sucedida
+        }
+        return false; // Estoque insuficiente
     }
 
     @Override
