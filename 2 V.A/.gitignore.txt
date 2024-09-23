@@ -1,0 +1,3 @@
+# Ignorar arquivos e pastas de metadados
+metadata/
+*.metadata
