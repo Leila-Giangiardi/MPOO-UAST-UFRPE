@@ -50,7 +50,7 @@ public class TelaProdutos extends JFrame {
 		comprarButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				realizarCompra(null);
+				realizarCompra();
 			}
 		});
 
@@ -101,58 +101,47 @@ public class TelaProdutos extends JFrame {
 	}
 
 	// Método para realizar uma compra
-	private void realizarCompra(JDialog compraDialog) {
-	    String codigoBarras;
+	private void realizarCompra() {
+		String codigoBarras;
+		do {
+			// Pergunta ao usuário pelo código de barras
+			codigoBarras = JOptionPane.showInputDialog(this, "Informe o código de barras do produto:");
+			Produto produto = BaseDados.buscarProduto(codigoBarras);
 
-	    while (true) {
-	        // Solicita o código de barras do produto
-	        codigoBarras = JOptionPane.showInputDialog(compraDialog, "Informe o código de barras do produto:");
-	        
-	        // Se o usuário cancelar, fecha o diálogo
-	        if (codigoBarras == null) {
-	            compraDialog.dispose(); // Fecha o dialog
-	            return; // Sai do método
-	        }
+			if (produto != null) {
+				String quantidadeStr = JOptionPane.showInputDialog(this, "Informe a quantidade do produto:");
+				try {
+					int quantidade = Integer.parseInt(quantidadeStr);
 
-	        Produto produto = BaseDados.buscarProduto(codigoBarras);
+					// Tente reduzir o estoque do produto
+					if (produto.reduzirEstoque(quantidade)) {
+						compra.adicionarProduto(produto, quantidade); // Adiciona o produto à compra
 
-	        // Verifica se o produto foi encontrado
-	        if (produto != null) {
-	            String quantidadeStr = JOptionPane.showInputDialog(compraDialog, "Informe a quantidade do produto:");
-	            
-	            // Se o usuário cancelar, fecha o diálogo
-	            if (quantidadeStr == null) {
-	                compraDialog.dispose(); // Fecha o dialog
-	                return; // Sai do método
-	            }
-
-	            try {
-	                int quantidade = Integer.parseInt(quantidadeStr);
-	                if (produto.reduzirEstoque(quantidade)) {
-	                    compra.adicionarProduto(produto, quantidade);
-
-	                    int resposta = JOptionPane.showConfirmDialog(compraDialog, "Deseja adicionar mais produtos?", "Adicionar Produto", JOptionPane.YES_NO_OPTION);
-	                    if (resposta == JOptionPane.NO_OPTION) {
-	                        // Exibe valor total da compra e aplica desconto se possível
-	                        gerente.darDesconto(compra);
-	                        JOptionPane.showMessageDialog(compraDialog, "Valor total da compra: R$" + compra.getValorTotal(), "Total", JOptionPane.INFORMATION_MESSAGE);
-	                        compra = new Compra(); // Reinicia a compra
-	                        updateTable(); // Atualiza a tabela após a compra
-	                        compraDialog.dispose(); // Fecha o dialog após a compra
-	                        break; // Sai do loop
-	                    }
-	                } else {
-	                    JOptionPane.showMessageDialog(compraDialog, "Estoque insuficiente para a quantidade solicitada!", "Erro", JOptionPane.ERROR_MESSAGE);
-	                }
-	            } catch (NumberFormatException ex) {
-	                JOptionPane.showMessageDialog(compraDialog, "Quantidade inválida!", "Erro", JOptionPane.ERROR_MESSAGE);
-	            }
-	        } else {
-	            JOptionPane.showMessageDialog(compraDialog, "Produto não encontrado!", "Erro", JOptionPane.ERROR_MESSAGE);
-	        }
-	    }
+						// Perguntar se o cliente deseja adicionar mais produtos
+						int resposta = JOptionPane.showConfirmDialog(this, "Deseja adicionar mais produtos?",
+								"Adicionar Produto", JOptionPane.YES_NO_OPTION);
+						if (resposta == JOptionPane.NO_OPTION) {
+							// Exibir valor total da compra e aplicar desconto se possível
+							gerente.darDesconto(compra);
+							JOptionPane.showMessageDialog(this, "Valor total da compra: R$" + compra.getValorTotal(),
+									"Total", JOptionPane.INFORMATION_MESSAGE);
+							compra = new Compra(); // Reiniciar a compra
+							updateTable(); // Atualizar tabela após compra
+							break; // Sai do loop
+						}
+					} else {
+						// Exibir mensagem de erro se não houver estoque suficiente
+						JOptionPane.showMessageDialog(this, "Estoque insuficiente para a quantidade solicitada!",
+								"Erro", JOptionPane.ERROR_MESSAGE);
+					}
+				} catch (NumberFormatException ex) {
+					JOptionPane.showMessageDialog(this, "Quantidade inválida!", "Erro", JOptionPane.ERROR_MESSAGE);
+				}
+			} else {
+				JOptionPane.showMessageDialog(this, "Produto não encontrado!", "Erro", JOptionPane.ERROR_MESSAGE);
+			}
+		} while (true); // Continua perguntando até que o cliente decida não adicionar mais produtos
 	}
-
 
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(new Runnable() {

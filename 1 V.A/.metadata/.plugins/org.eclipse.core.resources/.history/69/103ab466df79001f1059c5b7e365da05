@@ -50,7 +50,7 @@ public class TelaProdutos extends JFrame {
 		comprarButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				realizarCompra(null);
+				realizarCompra();
 			}
 		});
 
